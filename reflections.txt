@@ -3,11 +3,23 @@
 1. What is the gem of your choice and how did you use it?
 2. Describe the 2 features you added to the project.
   a) Feature 1...
+  Change the priority levels of items
+
   b) Feature 2...
+  Postpone the due for todo
 
 # REFLECTIONS
 # -------------------------------------------------------
 1. How long did you spend working on this project?
+2.5 hours
+
 2. What was the most rewarding challenge you conquered?
+Use gems
+
 3. What two additional features did you build? Why?
+
+  Change the priority levels of items
+  Postpone the due for todo
+
 4. Where do you still have room to grow?
+learn more gems by google first

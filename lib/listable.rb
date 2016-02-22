@@ -4,9 +4,9 @@ module Listable
     "#{description}".ljust(30)
   end
   def format_priority(priority)
-    value = " ⇧" if priority == "high"
-    value = " ⇨" if priority == "medium"
-    value = " ⇩" if priority == "low"
+    value = " ⇧".colorize(:green) if priority == "high"
+    value = " ⇨".colorize(:yellow) if priority == "medium"
+    value = " ⇩".colorize(:red) if priority == "low"
     value = "" if !priority
     return value
   end
