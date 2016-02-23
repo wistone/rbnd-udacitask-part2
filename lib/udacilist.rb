@@ -1,62 +1,61 @@
 class UdaciList
   # include UdaciListErrors
-  attr_reader :title, :items, :type
+  attr_reader :title, :items
 
   def initialize(options={})
     @title = options[:title] ? options[:title] : "Default List"
-    @items = []
-    @types = []
-    @todos = []
-    @events = []
-    @links = []
+    @items = {}
+    @items[:types] = Array.new
+    @items[:items] = Array.new
   end
   def add(type, description, options={})
     type = type.downcase
     if type == "todo"
-      item  = TodoItem.new(description, options) 
-      @types << type.colorize(:yellow)
-      @todos << item
+      @items[:items] << TodoItem.new(description, options) 
+      @items[:types] << type
     elsif type == "event"
-      item = EventItem.new(description, options) 
-      @types << type.colorize(:green)
-      @events << item
+      @items[:items] << EventItem.new(description, options) 
+      @items[:types].push(type)
     elsif type == "link"
-      item = LinkItem.new(description, options) 
-      @types << type.colorize(:blue)
-      @links << item
+      @items[:items] << LinkItem.new(description, options) 
+      @items[:types] << type
     else
       raise UdaciListErrors::InvalidItemType, "No exising type: '#{type}'!"
     end
-    @items << item
   end
   def delete(index)
-    if (index <= 0 || index > @items.count)
+    if (index <= 0 || index > @items[:types].count)
       raise UdaciListErrors::IndexExceedsListSize, "Index '#{index}' out of range!"
     end
-    @items.delete_at(index - 1)
+    @items[:items].delete_at(index - 1)
+    @items[:types].delete_at(index - 1)
   end
 
   def change_priority(index, priority)
     # puts @types[index - 1]
-    if @types[index - 1] == "todo".colorize(:yellow)
+    if @items[:types][index - 1] == "todo"
       # puts "here"
-      @items[index - 1].change_priority(priority)
+      @items[:items][index - 1].change_priority(priority)
     end
   end
   def postpone(index, days)
-    @items[index - 1].postpone(days)
+    @items[:items][index - 1].postpone(days)
   end
   def all
     rows = []
-    @items.each_with_index do |item, position|
-      rows << [(position + 1).to_s + ')', @types[position], item.details]
+    @items[:items].each_with_index do |item, position|
+      rows << [(position + 1).to_s + ')', @items[:types][position], item.details]
     end
     table = Terminal::Table.new(title: @title, rows: rows)
     puts table
   end
   def filter(type)
-    return @todos if type == "todo"
-    return @events if type == "event"
-    return @links if type == "link"
+    res = []
+    @items[:items].each_with_index do |item, position|
+      if @items[:types][position] == type
+        res << item 
+      end
+    end
+    return res
   end
 end
